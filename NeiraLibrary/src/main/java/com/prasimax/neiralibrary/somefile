@@ -1,0 +1,202 @@
+BluetoothAdapter ba;
+    BluetoothDevice bd;
+    BluetoothSocket bs;
+    Thread nbcThread;
+
+    Handler mHandler;
+//    NBStatus currentStatus;
+
+    /**
+     * Bluetooth status enumeration inside Neira Bluetooth class.
+     */
+    public enum  NBStatus {
+        /**
+         *  NULL adapter means that there are no bluetooth adapter on android.
+         */
+        ADAPTER_NULL,
+        /**
+         *  Adapter exist but not being enabled.
+         */
+        ADAPTER_NOT_ENABLED,
+        /**
+         *  Adapter is ready to use.
+         */
+        ADAPTER_READY,
+
+        DEVICE_NULL, DEVICE_SET, DEVICE_DISCONNECTED, DEVICE_CONNECTED;
+    }
+
+    public NeiraBluetooth(){
+        ba = BluetoothAdapter.getDefaultAdapter();
+    }
+
+    /**
+     * Returns status of bluetooth adapter.
+     *
+     * @return      current bluetooth status
+     * @see         NBStatus
+     */
+    public NBStatus isAdapterReady(){
+        NBStatus result = (ba != null) ?
+                (ba.isEnabled() ? NBStatus.ADAPTER_READY : NBStatus.ADAPTER_NOT_ENABLED)
+                : NBStatus.ADAPTER_NULL;
+
+        return result;
+    }
+
+    /**
+     * Returns current bluetooth device that already bonded to android.
+     * Null return means that Adapter not ready. Empty list return
+     * means that Adapter not enabled or no list found.
+     *
+     * @return      Bluetooth device list
+     * @see         NBStatus
+     */
+    public Set<BluetoothDevice> getDeviceList(){
+        if(isAdapterReady() == NBStatus.ADAPTER_READY){
+            return ba.getBondedDevices();
+        }
+        return null;
+    }
+
+    public NBStatus isConnected(){
+        NBStatus result = (bd == null ? NBStatus.DEVICE_NULL : NBStatus.DEVICE_SET);
+
+        if (result == NBStatus.DEVICE_SET){
+            if(bs == null){
+                result = NBStatus.DEVICE_DISCONNECTED;
+            }else{
+                result = (bs.isConnected() ? NBStatus.DEVICE_CONNECTED : NBStatus.DEVICE_DISCONNECTED;
+            }
+        }
+
+        return result;
+    }
+
+    public void resetAdapter(){
+        ba = BluetoothAdapter.getDefaultAdapter();
+    }
+
+    public void disconnect() throws InterruptedException {
+       if(nbcThread != null){
+           if(nbcThread.isAlive()){
+               nbcThread.join();
+           }
+       }
+    }
+
+    private class NeiraBluetoothControl implements Runnable {
+
+        @Override
+        public void run() {
+
+        }
+    }
+
+
+////////////////////////////////////////////////////////////////////////
+
+BluetoothSocket BS;
+    BluetoothDevice BD;
+    BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+    String neiraName, neiraMacAddress;
+    InputStream mInputStream;
+    OutputStream mOutputStream;
+//    UUID id = UUID.randomUUID();
+
+    /* Info jika ingin menggunakan serial board/SPP maka UUID menggunakan ID berikut */
+    UUID id = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+
+    public void write(byte[] data) throws IOException {
+        mOutputStream.write(data);
+    }
+
+    public int read(byte[] data) throws IOException {
+        return mInputStream.read(data);
+    }
+
+    public boolean open() throws IOException {
+        boolean result = false;
+        BS = BD.createRfcommSocketToServiceRecord(id);
+        BS.connect();
+        if(BS.isConnected()){
+            mInputStream = BS.getInputStream();
+            mOutputStream = BS.getOutputStream();
+            result = true;
+        }
+        return result;
+    }
+
+    public boolean findDevice(){
+        boolean result = false;
+
+        Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
+
+        for (BluetoothDevice device : pairedDevices) {
+            String deviceName = device.getName();
+            String deviceHardwareAddress = device.getAddress(); // MAC address
+
+            if(deviceName == neiraName && deviceHardwareAddress == neiraMacAddress){
+                BD = device; result = true;
+                return result;
+            }
+        }
+
+        return result;
+    }
+
+    public boolean findDeviceByName(){
+        boolean result = false;
+
+        Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
+
+        for (BluetoothDevice device : pairedDevices) {
+            String deviceName = device.getName();
+
+            if(deviceName == neiraName){
+                BD = device; result = true;
+                return result;
+            }
+        }
+
+        return result;
+    }
+
+    public boolean findDeviceByAddress(){
+        boolean result = false;
+
+        Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
+
+        for (BluetoothDevice device : pairedDevices) {
+            String deviceHardwareAddress = device.getAddress(); // MAC address
+
+            if(deviceHardwareAddress == neiraMacAddress){
+                BD = device; result = true;
+                return result;
+            }
+        }
+
+        return result;
+    }
+
+    public boolean checkBluetoothCapability(){
+        if(mBluetoothAdapter == null){
+            return false;
+        }else {
+            return true;
+        }
+    }
+
+    public boolean isConnected(){
+        if(checkBluetoothCapability()){
+            return BS.isConnected();
+        }else return false;
+    }
+
+    public void setNeiraName(String name){
+        neiraName = name;
+    }
+
+    public void setNeiraMacAddress(String name){
+        neiraMacAddress = name;
+    }

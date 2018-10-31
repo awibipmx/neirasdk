@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view"
+    >
+
+    <item
+        android:id="@+id/nav_printer_function"
+        android:title="Printer Functions"
+        android:checkable="true"
+        android:checked="false"
+        >
+    </item>
+
+    <group
+        android:checkableBehavior="none"
+        android:visible="false"
+        android:id="@+id/nav_group_printer_functions"
+        >
+        <item
+            android:id="@+id/nav_pf_PrinterInit"
+            android:title="Printer Init" />
+        <item
+            android:id="@+id/nav_pf_PrintSelfTest"
+            android:title="Print Self Test" />
+        <item
+            android:id="@+id/nav_pf_LineFeed"
+            android:title="Send Line Feed" />
+        <item
+            android:id="@+id/nav_pf_PrintAndFeedPaper"
+            android:title="Print And Feed Paper" />
+        <item
+            android:id="@+id/nav_pf_SetBeepTimes"
+            android:title="Set Beep Times" />
+        <item
+            android:id="@+id/nav_pf_SetLeftMargin"
+            android:title="Set Left Margin" />
+        <item
+            android:id="@+id/nav_pf_SetPrintWidth"
+            android:title="Set Print Width" />
+        <item
+            android:id="@+id/nav_pf_SetLineSpacingToDefault"
+            android:title="Set Spacing to Default" />
+        <item
+            android:id="@+id/nav_pf_SetLineSpacing"
+            android:title="Set Line Spacing" />
+        <item
+            android:id="@+id/nav_pf_SetBold"
+            android:title="Set Bold" />
+        <!--<item-->
+            <!--android:id="@+id/nav_pf_SetFontSize"-->
+            <!--android:title="Set Font Size" />-->
+        <item
+            android:id="@+id/nav_pf_SetPrinterSpeed"
+            android:title="Set Printer Speed" />
+        <item
+            android:id="@+id/nav_pf_SetQRCode"
+            android:title="Set QR Code" />
+        <item
+            android:id="@+id/nav_pf_PrintQRCode"
+            android:title="Print QR Code" />
+
+    </group>
+
+    <item
+        android:id="@+id/nav_sample_receipt"
+        android:title="Sample Receipts"
+        android:checkable="true"
+        android:checked="false"
+        >
+    </item>
+
+    <group
+        android:checkableBehavior="none"
+        android:visible="false"
+        android:id="@+id/nav_group_sample_receipt"
+        >
+        <item
+            android:id="@+id/nav_sr_receipt1"
+            android:title="Receipt 1" />
+        <item
+            android:id="@+id/nav_sr_receipt2"
+            android:title="Receipt 2" />
+    </group>
+
+    <item
+        android:id="@+id/nav_custombyte"
+        android:title="Send Custom Bytes in HEX" />
+</menu>
